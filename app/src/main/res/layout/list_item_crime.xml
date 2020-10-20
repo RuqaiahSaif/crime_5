@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/crime_title"
-        android:layout_width="208dp"
+        android:layout_width="270dp"
         android:layout_height="24dp"
         android:layout_marginTop="3dp"
         android:layout_marginBottom="5dp"
@@ -21,7 +21,7 @@
 
     <TextView
         android:id="@+id/crime_date"
-        android:layout_width="221dp"
+        android:layout_width="270dp"
         android:layout_height="20dp"
         android:layout_marginStart="5dp"
         android:layout_marginTop="8dp"
@@ -40,7 +40,7 @@
         android:layout_height="33dp"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.753"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/a" />

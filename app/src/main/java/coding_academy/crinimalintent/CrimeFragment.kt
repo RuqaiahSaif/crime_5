@@ -6,13 +6,14 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-
+import java.util.*
+private const val ARG_CRIME_ID = "crime_id"
 class CrimeFragment: Fragment() {
    private lateinit var crime: Crime
    private lateinit var titleText: TextView
@@ -22,11 +23,16 @@ class CrimeFragment: Fragment() {
     private val crimeListViewModel: CrimeListViewModel by lazy {
         ViewModelProviders.of(this).get(CrimeListViewModel::class.java)
     }
+    private val crimeDetailViewModel: CrimeDetailViewModel by lazy {
+        ViewModelProviders.of(this).get(CrimeDetailViewModel::class.java)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         crime=Crime()
-
+        val crimeId: UUID = arguments?.getSerializable(ARG_CRIME_ID) as UUID;
+       // Toast.makeText(context, crimeId.toString(), Toast.LENGTH_SHORT).show()
+        crimeDetailViewModel.loadCrime(crimeId)
     }
 
     override fun onCreateView(
@@ -47,7 +53,26 @@ class CrimeFragment: Fragment() {
 
         return view
     }
-   override fun onStart() {
+    private fun updateUI() {
+        titleText.setText(crime.title)
+        dateButton.text = crime.date.toString()
+        solvedCheckBox.isChecked = crime.isSolved
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        super.onViewCreated(view, savedInstanceState)
+        crimeDetailViewModel.crimeLiveData.observe(
+            viewLifecycleOwner,
+            Observer { crime ->
+                crime?.let {
+                    this.crime = crime
+                    updateUI()
+                }
+            })
+
+
+    }
+    override fun onStart() {
         super.onStart()
         val titleWatcher = object : TextWatcher {
 
@@ -59,6 +84,9 @@ class CrimeFragment: Fragment() {
             ) {
 // This space intentionally left blank
             }
+
+
+
 
             override fun onTextChanged(
                 sequence: CharSequence?,
@@ -81,6 +109,22 @@ class CrimeFragment: Fragment() {
        }
        }
    }
-
+    override fun onStop() {
+        super.onStop()
+        crimeDetailViewModel.saveCrime(crime)
+    }
+    companion object {
+        fun newInstance(crimeId: UUID): CrimeFragment {
+            val args = Bundle().apply {
+                putSerializable(ARG_CRIME_ID, crimeId)
+            }
+            return CrimeFragment().apply {
+                arguments = args
+            }
+        }
 
     }
+
+    }
+
+

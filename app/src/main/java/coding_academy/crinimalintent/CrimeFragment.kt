@@ -1,5 +1,6 @@
 package coding_academy.crinimalintent
-
+import android.app.DatePickerDialog
+import android.app.ProgressDialog.show
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,11 +15,17 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import java.util.*
 private const val ARG_CRIME_ID = "crime_id"
-class CrimeFragment: Fragment() {
+private const val DIALOG_DATE = "DialogDate"
+private const val DIALOG_TIME  = "Dialogtime"
+private const val REQUEST_DATE = 0
+
+ class CrimeFragment: Fragment() ,DataPicketFragment.Callbacks{
    private lateinit var crime: Crime
    private lateinit var titleText: TextView
     private lateinit var dateButton: Button
+     private lateinit var timeButton: Button
   private  lateinit var solvedCheckBox: CheckBox
+
 
     private val crimeListViewModel: CrimeListViewModel by lazy {
         ViewModelProviders.of(this).get(CrimeListViewModel::class.java)
@@ -33,6 +40,9 @@ class CrimeFragment: Fragment() {
         val crimeId: UUID = arguments?.getSerializable(ARG_CRIME_ID) as UUID;
        // Toast.makeText(context, crimeId.toString(), Toast.LENGTH_SHORT).show()
         crimeDetailViewModel.loadCrime(crimeId)
+
+
+
     }
 
     override fun onCreateView(
@@ -44,11 +54,14 @@ class CrimeFragment: Fragment() {
         val view=inflater.inflate(R.layout.fragment_crime,container,false)
         titleText=view.findViewById(R.id.crime_title)as EditText
         dateButton = view.findViewById(R.id.crime_date) as Button
+        timeButton = view.findViewById(R.id.crime_time) as Button
         solvedCheckBox = view.findViewById(R.id.crime_solved) as CheckBox
-        dateButton.apply {
+ /*       dateButton.apply {
             text = crime.date.toString()
-            isEnabled = false
-        }
+            isEnabled = false }
+            */
+
+
 
 
         return view
@@ -86,8 +99,6 @@ class CrimeFragment: Fragment() {
             }
 
 
-
-
             override fun onTextChanged(
                 sequence: CharSequence?,
                 start: Int,
@@ -101,16 +112,32 @@ class CrimeFragment: Fragment() {
 // This one too
             }
         }
-       titleText.addTextChangedListener(titleWatcher)
+        titleText.addTextChangedListener(titleWatcher)
 
-       solvedCheckBox.apply {
-           setOnCheckedChangeListener { _, isChecked ->
-           crime.isSolved = isChecked
-       }
-       }
+        solvedCheckBox.apply {
+            setOnCheckedChangeListener { _, isChecked ->
+                crime.isSolved = isChecked
+            }
+
+        }
+        dateButton.setOnClickListener {
+            DataPicketFragment.newInstance(crime.date).apply {
+                setTargetFragment(this@CrimeFragment, REQUEST_DATE)
+                show(this@CrimeFragment.requireFragmentManager(), DIALOG_DATE)
+            }
+        }
+        timeButton.setOnClickListener{
+            var a=timeButton.text
+            TimePickerFragment.newInstance(a).apply{
+                show(this@CrimeFragment.requireFragmentManager(), DIALOG_TIME)
+
+
+            }
+        }
    }
     override fun onStop() {
         super.onStop()
+
         crimeDetailViewModel.saveCrime(crime)
     }
     companion object {
@@ -125,6 +152,12 @@ class CrimeFragment: Fragment() {
 
     }
 
-    }
+     override fun onDateSelected(date: Date) {
+         crime.date = date
+         updateUI()
+
+     }
+
+ }
 
 

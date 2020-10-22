@@ -27,7 +27,7 @@
     android:id="@+id/crime_time"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text=" 11:56 "/>
+    android:text=" change the time "/>
     <CheckBox
         android:id="@+id/crime_solved"
         android:layout_width="match_parent"

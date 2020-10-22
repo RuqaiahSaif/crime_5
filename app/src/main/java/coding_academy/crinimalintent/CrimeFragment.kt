@@ -18,8 +18,9 @@ private const val ARG_CRIME_ID = "crime_id"
 private const val DIALOG_DATE = "DialogDate"
 private const val DIALOG_TIME  = "Dialogtime"
 private const val REQUEST_DATE = 0
+private const val REQUEST_TIME = 1
 
- class CrimeFragment: Fragment() ,DataPicketFragment.Callbacks{
+ class CrimeFragment: Fragment() ,DataPicketFragment.Callbacks,TimePickerFragment.Callbacks{
    private lateinit var crime: Crime
    private lateinit var titleText: TextView
     private lateinit var dateButton: Button
@@ -127,12 +128,11 @@ private const val REQUEST_DATE = 0
             }
         }
         timeButton.setOnClickListener{
-            var a=timeButton.text
-            TimePickerFragment.newInstance(a).apply{
+
+            TimePickerFragment.newInstance(crime.date).apply{
+                setTargetFragment(this@CrimeFragment, REQUEST_TIME)
                 show(this@CrimeFragment.requireFragmentManager(), DIALOG_TIME)
-
-
-            }
+                            }
         }
    }
     override fun onStop() {
@@ -157,6 +157,12 @@ private const val REQUEST_DATE = 0
          updateUI()
 
      }
+
+     override fun onTimeSelected(time: Date) {
+         crime.date = time
+         updateUI()
+     }
+
 
  }
 

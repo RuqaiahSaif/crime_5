@@ -13,6 +13,7 @@ class MainActivity : AppCompatActivity(),CrimeListFragment.CallBacks  {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
+
         val currentFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container)
 
@@ -29,5 +30,6 @@ class MainActivity : AppCompatActivity(),CrimeListFragment.CallBacks  {
         fm?.beginTransaction()?.replace(R.id.fragment_container, fragment)?.addToBackStack(null)
             .commit()
     }
+
 
 }

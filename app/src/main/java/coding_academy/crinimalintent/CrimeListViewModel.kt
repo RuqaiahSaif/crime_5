@@ -9,5 +9,12 @@ class CrimeListViewModel: ViewModel() {
     fun addCrime(crime: Crime) {
         crimeRepository.addCrime(crime)
     }
+    fun check_data ():Boolean{
+
+        if (crimeListLiveData.value==null)
+      return  false
+     else   return true
+
+    }
 
 }

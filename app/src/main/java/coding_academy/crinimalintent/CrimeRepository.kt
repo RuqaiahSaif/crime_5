@@ -30,6 +30,7 @@ private const val DATABASE_NAME = "crime-database"
                 crimeDao.addCrime(crime)
             }
         }
+
         companion object {
             private var INSTANCE: CrimeRepository? = null
             fun initialize(context: Context) {

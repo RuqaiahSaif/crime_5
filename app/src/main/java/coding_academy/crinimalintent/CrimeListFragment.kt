@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.*
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -22,6 +23,8 @@ private const val TAG = "CrimeListFragment"
 class CrimeListFragment: Fragment() {
     private lateinit var crimeRecyclerView: RecyclerView
     private var adapter:  CrimeAdapter? =  CrimeAdapter()
+    private lateinit var add: Button
+    private lateinit var no_crime: TextView
 
     private val crimeListViewModel: CrimeListViewModel by lazy {
         ViewModelProviders.of(this).get(CrimeListViewModel::class.java)
@@ -59,13 +62,26 @@ interface CallBacks{
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        savedInstanceState: Bundle?): View? {
         var view = inflater.inflate(R.layout.crime_list_fragment, container, false)
         crimeRecyclerView = view.findViewById(R.id.crime_recycler_view)
         crimeRecyclerView.layoutManager = LinearLayoutManager(context)
         crimeRecyclerView.adapter = adapter
+        add = view.findViewById(R.id.add1) as Button
+        no_crime = view.findViewById(R.id.no_crime) as TextView
+
+        if (crimeListViewModel.check_data() == true) {
+            add.visibility = View.GONE
+            no_crime.visibility = View.GONE
+
+        } else {
+            add.visibility = View.VISIBLE
+            no_crime.visibility = View.VISIBLE
+
+
+        }
         return view
+
     }
     private fun updateUI(crimes: List<Crime>) {
 
@@ -225,5 +241,16 @@ interface CallBacks{
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        add.setOnClickListener{
+
+            val crime = Crime()
+            crimeListViewModel.addCrime(crime)
+            callBacks?.onItemSelected(crime.id)
+
+
+        }
+    }
 }
 

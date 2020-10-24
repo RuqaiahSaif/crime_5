@@ -38,7 +38,7 @@ private const val REQUEST_TIME = 1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         crime=Crime()
-        val crimeId: UUID = arguments?.getSerializable(ARG_CRIME_ID) as UUID;
+        val crimeId: UUID = arguments?.getSerializable(ARG_CRIME_ID) as  UUID
        // Toast.makeText(context, crimeId.toString(), Toast.LENGTH_SHORT).show()
         crimeDetailViewModel.loadCrime(crimeId)
 
